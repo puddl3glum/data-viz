@@ -1,0 +1,1 @@
+Execution plan: Plot size -> sep x -> zip w/ idx -> scale -> getbars -> plot
