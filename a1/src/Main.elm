@@ -35,7 +35,7 @@ main =
             in
             List.map2 (\r x0 -> { r | x = x0 }) newpairs indices
 
-        dset0 =
+        dset0orig =
             [ Datapair 100 74.6
             , Datapair 80 67.7
             , Datapair 130 124.4
@@ -49,7 +49,7 @@ main =
             , Datapair 50 57.3
             ]
 
-        dset1 =
+        dset1orig =
             [ Datapair 80 65.8
             , Datapair 80 57.6
             , Datapair 80 77.1
@@ -63,17 +63,23 @@ main =
             , Datapair 80 68.9
             ]
 
+        dset0 =
+            offsetPairs 5 5 (scalePairs height width dset0orig)
+
+        dset1 =
+            offsetPairs 5 5 (scalePairs height width dset1orig)
+
         dset0x =
-            scalePairs height width (getPart .x dset0)
+            offsetPairs 5 5 (scalePairs height width (getPart .x dset0))
 
         dset0y =
-            scalePairs height width (getPart .y dset0)
+            offsetPairs 5 5 (scalePairs height width (getPart .y dset0))
 
         dset1x =
-            scalePairs height width (getPart .x dset1)
+            offsetPairs 5 5 (scalePairs height width (getPart .x dset1))
 
         dset1y =
-            scalePairs height width (getPart .y dset1)
+            offsetPairs 5 5 (scalePairs height width (getPart .y dset1))
 
         -- { data = [ ( 100, 74.6 ), ( 80, 67.7 ) ] }
     in
@@ -88,7 +94,7 @@ main =
                     , i [] [ text "x" ]
                     , text "-coordinates"
                     ]
-                , getPlot width height padding (getBars (scalePairs height width (getPart .x dset0)))
+                , getPlot width height padding (getBars dset0x)
                 ]
             , div [ class "plot" ]
                 [ h4 []
@@ -96,7 +102,7 @@ main =
                     , i [] [ text "y" ]
                     , text "-coordinates"
                     ]
-                , getPlot width height padding (getBars (scalePairs height width (getPart .y dset0)))
+                , getPlot width height padding (getBars dset0y)
                 ]
             , div [ class "plot" ]
                 [ h4 []
@@ -134,7 +140,7 @@ main =
                     , i [] [ text "x" ]
                     , text "-coordinates"
                     ]
-                , getPlot width height padding (getBars (scalePairs height width (getPart .x dset1)))
+                , getPlot width height padding (getBars dset1x)
                 ]
             , div [ class "plot" ]
                 [ h4 []
@@ -142,7 +148,7 @@ main =
                     , i [] [ text "y" ]
                     , text "-coordinates"
                     ]
-                , getPlot width height padding (getBars (scalePairs height width (getPart .y dset1)))
+                , getPlot width height padding (getBars dset1y)
                 ]
             , div [ class "plot" ]
                 [ h4 []
@@ -186,6 +192,11 @@ scalePairs xscale yscale pairs =
     List.map scalePair pairs
 
 
+offsetPairs : Float -> Float -> List Datapair -> List Datapair
+offsetPairs xoffset yoffset pairs =
+    List.map (\r -> Datapair (r.x + xoffset) (r.y + yoffset)) pairs
+
+
 getPlot : Float -> Float -> Float -> List (Svg msg) -> Svg msg
 getPlot pwidth pheight padding shapes =
     let
@@ -209,10 +220,10 @@ getBars pairs =
         getRect pair =
             let
                 xs =
-                    String.fromFloat (pair.x + 5)
+                    String.fromFloat pair.x
 
                 ys =
-                    String.fromFloat (pair.y + 5)
+                    String.fromFloat pair.y
             in
             rect [ class "bar", x xs, y "5", width "10", height ys ] []
     in
@@ -228,7 +239,7 @@ getCircle pair =
         ys =
             String.fromFloat pair.y
     in
-    circle [ cx xs, cy ys, class "scatter" ] []
+    circle [ r "3", cx xs, cy ys, class "scatter" ] []
 
 
 getPathLine : List Datapair -> List (Svg msg)
