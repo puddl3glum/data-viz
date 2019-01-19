@@ -1,7 +1,7 @@
 module Main exposing (main)
 
 import Browser
-import Html exposing (Html, br, button, div)
+import Html exposing (Html, br, button, div, h4, i)
 import Html.Events exposing (onClick)
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
@@ -81,21 +81,47 @@ main =
     div []
         [ -- , button [ onClick Increment ] [ text "+" ]
           div [ class "dataset" ]
-            [ div [ class "plot" ]
-                [ getPlot width height padding (getBars (scalePairs height width (getPart .x dset0)))
+            [ div
+                [ class "plot" ]
+                [ h4 []
+                    [ text "Dataset 1 "
+                    , i [] [ text "x" ]
+                    , text "-coordinates"
+                    ]
+                , getPlot width height padding (getBars (scalePairs height width (getPart .x dset0)))
                 ]
             , div [ class "plot" ]
-                [ getPlot width height padding (getBars (scalePairs height width (getPart .y dset0)))
+                [ h4 []
+                    [ text "Dataset 1 "
+                    , i [] [ text "y" ]
+                    , text "-coordinates"
+                    ]
+                , getPlot width height padding (getBars (scalePairs height width (getPart .y dset0)))
                 ]
-            , div [ class "plot" ] [ getPlot width height padding (List.map getCircle dset0) ]
+            , div [ class "plot" ]
+                [ h4 []
+                    [ text "Dataset 1 scatter plot"
+                    ]
+                , getPlot width height padding (List.map getCircle dset0)
+                ]
 
             --, div [ class "plot" ] [ getPlot getLine dataset0 ]
             -- path for x coord (which is retarded and meaningless)
             , div [ class "plot" ]
-                [ getPlot width height padding (getPathLine dset0x)
+                [ h4 []
+                    [ text "Dataset 1 "
+                    , i [] [ text "x" ]
+                    , text "-coordinates"
+                    ]
+                , getPlot width height padding (getPathLine dset0x)
                 ]
             , div [ class "plot" ]
-                [ getPlot width height padding (getLineSegments dset0y)
+                [ h4 []
+                    [ text "Dataset 1 "
+                    , i [] [ text "y" ]
+                    , text "-coordinates"
+                    ]
+                , getPlot width height padding (getLineSegments dset0y)
                 ]
             ]
         , br [] []
@@ -103,17 +129,41 @@ main =
             [ class "dataset" ]
             [ -- div [ class "plot" ] [ getPlot width height padding dataset1 (getBars .x scaled1) ]
               div [ class "plot" ]
-                [ getPlot width height padding (getBars (scalePairs height width (getPart .x dset1)))
+                [ h4 []
+                    [ text "Dataset 2 "
+                    , i [] [ text "x" ]
+                    , text "-coordinates"
+                    ]
+                , getPlot width height padding (getBars (scalePairs height width (getPart .x dset1)))
                 ]
             , div [ class "plot" ]
-                [ getPlot width height padding (getBars (scalePairs height width (getPart .y dset1)))
+                [ h4 []
+                    [ text "Dataset 2 "
+                    , i [] [ text "y" ]
+                    , text "-coordinates"
+                    ]
+                , getPlot width height padding (getBars (scalePairs height width (getPart .y dset1)))
                 ]
-            , div [ class "plot" ] [ getPlot width height padding (List.map getCircle dset1) ]
             , div [ class "plot" ]
-                [ getPlot width height padding (getPathLine dset1x)
+                [ h4 []
+                    [ text "Dataset 2 scatter plot" ]
+                , getPlot width height padding (List.map getCircle dset1)
                 ]
             , div [ class "plot" ]
-                [ getPlot width height padding (getLineSegments dset1y)
+                [ h4 []
+                    [ text "Dataset 2 "
+                    , i [] [ text "x" ]
+                    , text "-coordinates"
+                    ]
+                , getPlot width height padding (getPathLine dset1x)
+                ]
+            , div [ class "plot" ]
+                [ h4 []
+                    [ text "Dataset 2 "
+                    , i [] [ text "y" ]
+                    , text "-coordinates"
+                    ]
+                , getPlot width height padding (getLineSegments dset1y)
                 ]
 
             --, div [ class "plot" ] [ getPlot getLine dataset1 ]
@@ -147,7 +197,7 @@ getPlot pwidth pheight padding shapes =
     in
     svg
         [ width svgwidths, height svgheights, transform "scale(1, -1)" ]
-        ([ rect [ x "0", y "0", width svgwidths, height svgheights, fill "None" ] [] ]
+        ([ rect [ class "background", x "0", y "0", width svgwidths, height svgheights ] [] ]
             ++ shapes
         )
 
@@ -164,7 +214,7 @@ getBars pairs =
                 ys =
                     String.fromFloat (pair.y + 5)
             in
-            rect [ fill "green", x xs, y "5", width "10", height ys, stroke "forestgreen" ] []
+            rect [ class "bar", x xs, y "5", width "10", height ys ] []
     in
     List.map getRect pairs
 
@@ -178,7 +228,7 @@ getCircle pair =
         ys =
             String.fromFloat pair.y
     in
-    circle [ cx xs, cy ys, class "scatter", fill "green", r "5" ] []
+    circle [ cx xs, cy ys, class "scatter" ] []
 
 
 getPathLine : List Datapair -> List (Svg msg)
@@ -197,7 +247,7 @@ getPathLine pairs =
             in
             "M" ++ start ++ lstring
     in
-    List.singleton (Svg.path [ class "path-line", d path, stroke "green", strokeWidth "3px" ] [])
+    List.singleton (Svg.path [ class "path-line", d path ] [])
 
 
 getLineSegments : List Datapair -> List (Svg msg)
@@ -224,8 +274,6 @@ getLineSegments pairs =
                 , y1 (toString first.y)
                 , x2 (toString second.x)
                 , y2 (toString second.y)
-                , stroke "green"
-                , strokeWidth "3px"
                 ]
                 []
     in

@@ -1,0 +1,40 @@
+body {
+  background-color: cornsilk;
+}
+
+h4 {
+  font-family: georgia;
+  color: maroon;
+}
+
+.background {
+  fill: ivory;
+}
+
+.dataset {
+  float: left;
+}
+
+.plot {
+  float: left;
+  margin: 10px;
+}
+
+.bar {
+  fill: salmon;
+  stroke: goldenrod;
+}
+
+.scatter {
+  fill: salmon;
+  stroke: goldenrod;
+}
+
+.path-line {
+  fill: None;
+  stroke: goldenrod;
+}
+
+.line {
+  stroke: goldenrod;
+}
