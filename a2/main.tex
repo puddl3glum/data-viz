@@ -1,0 +1,153 @@
+\documentclass[10pt]{article}
+
+\usepackage{amsmath}
+\usepackage{bookmark}
+\usepackage[margin=1in]{geometry}
+
+\title{Assignment 2}
+\author{William Setzer}
+
+\begin{document}
+
+\maketitle
+
+\section*{Question 1}
+
+\[
+  trans_1 = 
+  \begin{bmatrix}
+    1 & 0 & 3 \\
+    0 & 1 & 2 \\
+    0 & 0 & 1
+  \end{bmatrix}
+  \ scale_1 =
+  \begin{bmatrix}
+    2 & 0 & 0 \\
+    0 & 2 & 0 \\
+    0 & 0 & 1
+  \end{bmatrix}
+  \ trans_2 =
+  \begin{bmatrix}
+    1 & 0 & -3 \\
+    0 & 1 & -2 \\
+    0 & 0 &  1
+  \end{bmatrix}
+\]
+
+\[
+  trans_2 * scale_1 * trans_1 =
+  \begin{bmatrix}
+    2 & 0 & -3 \\
+    0 & 2 & -2 \\
+    0 & 0 &  1
+  \end{bmatrix}
+\]
+
+\section*{Question 2}
+
+\[
+  scale_1 =
+  \begin{bmatrix}
+    2 & 0 & 0 \\
+    0 & 2 & 0 \\
+    0 & 0 & 1
+  \end{bmatrix}
+\]
+
+\section*{Question 3}
+
+\[
+  \ scale_1 =
+  \begin{bmatrix}
+    2 & 0 & 0 \\
+    0 & 2 & 0 \\
+    0 & 0 & 1
+  \end{bmatrix}
+  \ trans_1 =
+  \begin{bmatrix}
+    1 & 0 & -3 \\
+    0 & 1 & -2 \\
+    0 & 0 &  1
+  \end{bmatrix}
+\]
+
+\[
+  trans_1 * scale_1 =
+  \begin{bmatrix}
+    2 & 0 & -3 \\
+    0 & 2 & -2 \\
+    0 & 0 &  1
+  \end{bmatrix}
+\]
+
+\section*{Question 4}
+
+\[
+  reflect_1 =
+  \begin{bmatrix}
+    -1 &  0 & 0 \\
+     0 & -1 & 0 \\
+     0 &  0 & 1
+  \end{bmatrix}
+\]
+
+\section*{Question 5}
+
+\[
+  rotate_1 =
+  \begin{bmatrix}
+    cos \frac{\pi}{4} & -sin \frac{\pi}{4} & 0 \\
+    sin \frac{\pi}{4} &  cos \frac{\pi}{4} & 0 \\
+    0                 &  0                 & 1
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+    \frac{\sqrt{2}}{2} & -\frac{\sqrt{2}}{2} & 0 \\
+    \frac{\sqrt{2}}{2} &  \frac{\sqrt{2}}{2} & 0 \\
+    0                  &  0                  & 1
+  \end{bmatrix}
+  \ scale_1 =
+  \begin{bmatrix}
+    \frac{1}{\sqrt{2}} & 0                  & 0 \\
+    0                  & \frac{1}{\sqrt{2}} & 0 \\
+    0                  &                    & 1
+  \end{bmatrix}
+\]
+
+\[
+  rotate_1 * scale_1 =
+  \begin{bmatrix}
+    \frac{1}{2} & -\frac{1}{2} & 0 \\
+    \frac{1}{2} &  \frac{1}{2} & 0 \\
+    0           &  0           & 1
+  \end{bmatrix}
+\]
+
+\section*{Question 6}
+
+\[
+  trans_1 =
+  \begin{bmatrix}
+    1 & 0 & 0 \\
+    0 & 1 & 100 \\
+    0 & 0 & 1
+  \end{bmatrix}
+  \ reflect_1 =
+  \begin{bmatrix}
+    1 &  0 & 0 \\
+    0 & -1 & 0 \\
+    0 &  0 & 1
+  \end{bmatrix}
+\]
+
+\[
+  trans_1 * reflect_1 =
+  \begin{bmatrix}
+    1 &  0 & 0 \\
+    0 & -1 & 100 \\
+    0 &  0 & 1
+  \end{bmatrix}
+\]
+
+\end{document}
+
