@@ -1,4 +1,14 @@
 
+let destroy_button = function() {
+  /*
+   * @SideEffect
+   * Hides button.create_curve
+   * */
+
+  let button = document.querySelector("button.create-curve");
+  button.remove();
+}
+
 let get_bezier_point_position = function(pos, p0, p1, p2, p3) {
   /*
    * Determines the coordinates of a point on the bezier curve based on
