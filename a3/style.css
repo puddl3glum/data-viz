@@ -53,7 +53,7 @@ div.content {
   background: BlanchedAlmond;
   float: left;
   margin: 10px;
-  box-shadow: 4px 4px 4px grey;
+  box-shadow: 4px 4px 8px grey;
 }
 
 div.button-container {
