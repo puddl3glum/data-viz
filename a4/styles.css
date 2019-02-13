@@ -1,0 +1,188 @@
+:root{
+  --bg:    #282828; /* background color */
+  --bg0_h: #1d2021; /* background highlight */
+  --bg1:   #3c3836;
+  --bg2:   #504945;
+  --bg3:   #665c54;
+  --bg4:   #7c6f64;
+  --fg:    #ebdbb2; /* foreground elements */
+  --red:   #cc241d;
+  --lred:  #fb4934;
+  --green: #98971a;
+  --lgreen:#b8bb26;
+  --yellow:#d79921;
+  --lyellow: #fabd2f;
+  --blue:  #458588;
+  --lblue: #83a598;
+  --purple:#b16286;
+  --lpurple: #d3868b;
+  --aqua:  #689d6a;
+  --laqua: #8ec07c;
+  --gray:  #a89984;
+  --darkgray: #928374;
+}
+
+/*
+ * General settings
+ * */
+
+body {
+  background-color: var(--bg);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+}
+
+/* Set everything to IBM Plex mono and fg by default */
+
+h1, h2, h3, h4, p, a {
+  /* font-family: Courier New; */
+  font-family: IBM Plex Mono, monospace;
+  color: var(--fg);
+}
+
+p {
+  font-family: IBM Plex Sans, sans-serif;
+  word-break: normal;
+  hyphens: auto;
+}
+
+/*
+ * General containers
+ * */
+
+div.content {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  /* max-width: 25cm; */
+  /* min-width: 10cm; */
+}
+
+div.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* max-width: 50%; */
+  border-radius: 4px;
+  background: var(--bg1);
+  box-shadow: 0 0 4px 1px var(--bg0_h);
+  padding: 0.5cm;
+  margin: 0.5cm;
+}
+
+div.container h4 {
+  margin: auto;
+}
+
+button.graph-button {
+  color: var(--fg);
+}
+
+a.graph-button {
+  text-decoration: none;
+}
+
+.graph-button {
+  /* background: var(--bg2); */
+  font-family: IBM Plex Mono, monospace;
+  background-image: linear-gradient(var(--bg4), var(--bg2));
+  border: none;
+  padding: 2.5mm;
+  font-size: 4mm;
+  /* margin-bottom: auto; */
+  margin: 0;
+  border-right: var(--bg4) solid 1px;
+  outline: none;
+}
+
+.graph-button:first-of-type {
+  border-top-left-radius: 0.1cm;
+  border-bottom-left-radius: 0.1cm;
+}
+
+.graph-button:last-of-type {
+  border-top-right-radius: 0.1cm;
+  border-bottom-right-radius: 0.1cm;
+  border-right: none;
+}
+
+.graph-button:hover {
+  /* filter: drop-shadow(0 0 16px var(--bg0_h)); */
+  position: relative;
+  background-image: linear-gradient(var(--bg2), var(--bg4));
+}
+
+.graph-button:active {
+  /* transform: scale(0.95); */
+  transition-duration: 150ms;
+  filter: invert(100%);
+}
+
+div.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/*
+ * SVG stuff
+ * */
+
+svg {
+  padding: 0.5cm;
+}
+
+/*
+ * Plot-specific stuff
+ * */
+
+svg.plot {
+  background-color: var(--bg2);
+}
+
+/*
+ * Scatter pot-specific stuff
+ * */
+
+svg#scatter.plot circle {
+  stroke: var(--blue);
+  fill: var(--lblue);
+}
+
+svg#bar.plot rect {
+  stroke: var(--green);
+  fill: var(--lgreen);
+}
+
+svg#random.plot rect {
+  fill: var(--laqua);
+  stroke: var(--aqua);
+}
+
+svg#old-scatter.plot circle {
+  stroke: var(--yellow);
+  fill: var(--lyellow)
+}
+
+svg#old-bar.plot rect {
+  stroke: var(--purple);
+  fill: var(--lpurple);
+}
+
+svg#staircase.plot rect {
+  stroke: var(--red);
+  fill: var(--lred);
+}
+
+.background {
+  fill: ivory;
+}
+

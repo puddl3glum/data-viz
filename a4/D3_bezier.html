@@ -1,0 +1,87 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Assignment 3 - wjsetzer</title>
+    <script src="bezier_curve.js"></script>
+    <script type="text/javascript" src="https://d3js.org/d3.v5.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div class="content">
+
+    <div class='svg-container'>
+      <svg width="400" height="300">
+
+          <g class="control_points">
+              <!--Code to draw text tags P0, P1, P2 and P3 -->
+              <text x="30" y="240" class="small">P0</text>
+              <text x="130" y="40" class="small">P1</text>
+              <text x="210" y="40" class="small">P2</text>
+              <text x="260" y="250" class="small">P3</text>
+
+              <!--Code to draw lines between points (P0 and P1), (P1 and P2), and (P2 and P3) -->
+              <line x1="50" y1="250" x2="150" y2="50" />
+              <line x1="150" y1="50" x2="200" y2="50" />
+              <line x1="200" y1="50" x2="250" y2="250" />
+
+              <!--Code to draw the points P0, P1, P2 and P3 -->
+              <circle class="anchor" id="circle0" cx="50" cy="250" r="3" />
+              <circle class="anchor" id="circle1" cx="150" cy="50" r="3" />
+              <circle class="anchor" id="circle2" cx="200" cy="50" r="3" />
+              <circle class="anchor" id="circle3" cx="250" cy="250" r="3" />
+          </g>
+
+          <g class="bezier_points">
+              <circle id="bezier_point_p1" cx="10" cy="10" r="3" />
+              <circle id="bezier_point_p2" cx="30" cy="10" r="3" />
+              <circle id="bezier_point_p3" cx="50" cy="10" r="3" />
+              <circle id="bezier_point_p4" cx="70" cy="10" r="3" />
+              <circle id="bezier_point_p5" cx="90" cy="10" r="3" />
+              <circle id="bezier_point_p6" cx="110" cy="10" r="3" />
+              <circle id="bezier_point_p7" cx="130" cy="10" r="3" />
+              <circle id="bezier_point_p8" cx="150" cy="10" r="3" />
+              <circle id="bezier_point_p9" cx="170" cy="10" r="3" />
+              <circle id="bezier_point_p10" cx="190" cy="10" r="3" />
+              <circle id="bezier_point_p11" cx="210" cy="10" r="3" />
+              <circle id="bezier_point_p12" cx="230" cy="10" r="3" />
+              <circle id="bezier_point_p13" cx="250" cy="10" r="3" />
+              <circle id="bezier_point_p14" cx="270" cy="10" r="3" />
+              <circle id="bezier_point_p15" cx="290" cy="10" r="3" />
+              <circle id="bezier_point_p16" cx="310" cy="10" r="3" />
+              <circle id="bezier_point_p17" cx="330" cy="10" r="3" />
+              <circle id="bezier_point_p18" cx="350" cy="10" r="3" />
+              <circle id="bezier_point_p19" cx="370" cy="10" r="3" />
+              <circle id="bezier_point_p20" cx="390" cy="10" r="3" />
+          </g>
+
+      </svg>
+      <br>
+      <div class="button-container">
+        <button class="create-curve" onclick='generate_bezier_curve();destroy_button();'>Create Cubic Bezier</button>
+      </div>
+    </div>
+
+    <div class='svg-container'>
+      <svg width="400" height="300">
+          <path d="
+              M 50 250
+              C 150 50
+                200 50
+                250 250" />
+
+          <!-- For illustration of the support points -->
+          <circle class="anchor2" cx="50" cy="250" r="3"/>
+          <circle class="anchor2" cx="150" cy="50" r="3"/>
+          <circle class="anchor2" cx="200" cy="50" r="3"/>
+          <circle class="anchor2" cx="250" cy="250" r="3"/>
+      </svg>
+    </div>
+  </div>
+
+</body>
+
+</html>

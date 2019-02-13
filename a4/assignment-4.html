@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Assignment 4 - wjsetzer</title>
+  <script type="text/javascript" src="scripts.js"></script>
+  <script type="text/javascript" src="https://d3js.org/d3.v5.js"></script>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Mono|IBM+Plex+Sans" rel="stylesheet">
+</head>
+<body onload="load_content();">
+  <div class="content">
+    <div class="container">
+      <h4>Old Scatter Plot</h4>
+      <div id="old-scatter" class="plot-container">
+      </div>
+      <div class="button-container">
+        <button class="graph-button" onclick="plot_scatter_points(event);">Do</button>
+      </div>
+    </div>
+    <div class="container">
+      <h4>Old Bar Plot</h4>
+      <div id="old-bar" class="plot-container">
+      </div>
+      <div class="button-container">
+        <button class="graph-button" onclick="plot_old_bars(event);">Do</button>
+      </div>
+    </div>
+    <div class="container">
+      <h4>Random Rectangles</h4>
+      <div id="random" class="plot-container"></div>
+      <div class="button-container">
+        <button class="graph-button" onclick="add_rect();">Add Rectangle</button>
+        <button class="graph-button" onclick="delete_rects();">Remove All</button>
+      </div>
+    </div>
+    <div class="container">
+      <h4>Scatter Plot</h4>
+      <div id="scatter" class="plot-container"></div>
+    </div>
+    <div class="container">
+      <h4>Bar Plot</h4>
+      <div id="bar" class="plot-container"></div>
+    </div>
+    <div class="container">
+      <h4>Staircase</h4>
+      <div id="staircase" class="plot-container"></div>
+      <div class="button-container">
+        <button class="graph-button" onclick="staircase_toggle(event)">Staircase</button>
+      </div>
+    </div>
+    <div class="container">
+      <h4>Bezier Curve</h4>
+      <div id="bezier" class="plot-container"></div>
+    </div>
+  </div>
+</body>
+</html>
