@@ -6,6 +6,9 @@
   --bg3:   #665c54;
   --bg4:   #7c6f64;
   --fg:    #ebdbb2; /* foreground elements */
+  --fg0:   #fbf1c7;
+  --fg1:   #ebdbb2;
+  --fg2:   #d5c4a1;
   --red:   #cc241d;
   --lred:  #fb4934;
   --green: #98971a;
@@ -18,6 +21,8 @@
   --lpurple: #d3868b;
   --aqua:  #689d6a;
   --laqua: #8ec07c;
+  --orange:#d65d0e;
+  --lorange:#fe8019;
   --gray:  #a89984;
   --darkgray: #928374;
 }
@@ -37,13 +42,13 @@ body {
 
 /* Set everything to IBM Plex mono and fg by default */
 
-h1, h2, h3, h4, p, a {
+h1, h2, h3, h4, p, a, li {
   /* font-family: Courier New; */
   font-family: IBM Plex Mono, monospace;
   color: var(--fg);
 }
 
-p {
+p, li {
   font-family: IBM Plex Sans, sans-serif;
   word-break: normal;
   hyphens: auto;
@@ -71,6 +76,7 @@ div.container {
   justify-content: center;
   align-items: center;
   /* max-width: 50%; */
+  max-width: 33%;
   border-radius: 4px;
   background: var(--bg1);
   box-shadow: 0 0 4px 1px var(--bg0_h);
@@ -80,6 +86,14 @@ div.container {
 
 div.container h4 {
   margin: auto;
+}
+
+button:focus, input {
+  outline: none;
+}
+
+button::-moz-focus-inner, input::-moz-focus-outer {
+  border: 0;
 }
 
 button.graph-button {
@@ -100,7 +114,7 @@ a.graph-button {
   /* margin-bottom: auto; */
   margin: 0;
   border-right: var(--bg4) solid 1px;
-  outline: none;
+  cursor: pointer;
 }
 
 .graph-button:first-of-type {
@@ -133,13 +147,38 @@ div.button-container {
 }
 
 /*
+ * SLIDERS
+ * */
+.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  border-radius: 5px;  
+  background: var(--bg2);
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.slider::-moz-range-thumb {
+
+  cursor:pointer;
+  background: var(--fg0);
+  border: 1px solid var(--fg1);
+  border-radius: 25%;
+  width: 3mm;
+  height: 5mm;
+}
+
+/*
  * SVG stuff
  * */
 
+/*
 svg {
   padding: 0.5cm;
 }
-
+*/
 /*
  * Plot-specific stuff
  * */
@@ -180,6 +219,22 @@ svg#old-bar.plot rect {
 svg#staircase.plot rect {
   stroke: var(--red);
   fill: var(--lred);
+}
+
+svg#bezier.plot circle.control-point {
+  stroke: var(--orange);
+  fill: var(--lorange);
+  cursor: pointer;
+}
+
+svg#bezier.plot circle.curve-point {
+  stroke: var(--yellow);
+  fill: var(--lyellow);
+}
+
+svg#bezier.plot line.curve-line {
+  stroke: var(--lyellow);
+  stroke-width: 2px;
 }
 
 .background {

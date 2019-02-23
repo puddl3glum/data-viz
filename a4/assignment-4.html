@@ -52,6 +52,42 @@
     <div class="container">
       <h4>Bezier Curve</h4>
       <div id="bezier" class="plot-container"></div>
+      <input id="bezier" type="range" min="2" max="100" value="50" class="slider" oninput="update_curve()">
+    </div>
+    <div class="container">
+      <h4>Huffman Encoding</h4>
+      <p>
+      Note: The question says there are 8 intensity levels, but the chart lists only 7,
+      meaning that only three bits are necessary. In fact, only three bits are necessary
+      for 8 values as well if three 0 bits are included.
+      </p>
+      <p>
+        The Huffman codes for each intensity are:
+        <ul>
+          <li>0: 000000</li>
+          <li>1: 01</li>
+          <li>2: 000001</li>
+          <li>3: 0001</li>
+          <li>4: 001</li>
+          <li>5: 00001</li>
+          <li>6: 1</li>
+        </ul>
+      </p>
+      <p>
+        Before compression, there are 10,000 pixels. In that image, there are 7 intensities and to represent those intensities, 3 bits are needed (000 - 110). For fixed-width encoding, the total size of the image with be 30,000 bits, which is 3750B, or about 3.66KB.
+      </p>
+      <p>
+        The total size of the image after compression is 1825B, or about 1.78KB
+      </p>
+      <p>
+        The achieved compression ratio is 48.7%.
+      </p>
+    </div>
+    <div class="container">
+      <h4>Rainbow Map</h4>
+      <p>
+        Rainbow maps can be visually unreliable if the luminance values do not transition smoothly with the colors used. If there is a sudden jump in the luminance values, it can seem as if there is a major jump in whatever data range is being represented.
+      </p>
     </div>
   </div>
 </body>
