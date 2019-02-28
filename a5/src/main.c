@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-
+#include <sys/sysinfo.h>
 #include <stdint.h>
 
 #include <SDL2/SDL.h>
@@ -54,22 +54,27 @@ int main(int argc, char* argv[]) {
   // calloc buffer
   uint8_t* data = calloc(height * width, sizeof(uint8_t));
 
-
   fread(data, sizeof(uint8_t), height * width, infile);
   fclose(infile);
  
-  size_t max = 0;
+  // apply threshold
+  # pragma omp parallel for num_threads(get_nprocs()) collapse(2)
+  for (size_t row = 0; row < height; row++) {
+    for (size_t column = 0; column < width; column++ ) {
+      // printf("%d ", data[row * height + column]);
+      uint8_t brightness = data[row * height + column];
+      data[row * height + column] = (brightness > isovalue) ? 1 : 0;
+        // SDL_SetRenderDrawColor(renderer, brightness, brightness, brightness, 255);
+    }
+  }
 
   SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 
   for (size_t row = 0; row < height; row++) {
     for (size_t column = 0; column < width; column++ ) {
       // printf("%d ", data[row * height + column]);
-      uint8_t brightness = data[row * height + column];
-      if (brightness > isovalue) {
-        // SDL_SetRenderDrawColor(renderer, brightness, brightness, brightness, 255);
+      if ( data[row * height + column] )
         SDL_RenderDrawPoint(renderer, (int) row, (int) column);
-      }
     }
     // puts("");
   }
