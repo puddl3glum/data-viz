@@ -11,5 +11,11 @@ lflags = -lSDL2
 $(target) : $(src)
 	$(CC) $(cflags) $(lflags) -o $(target) $(src)
 
+debug : cflags += -gdwarf
+debug : $(target)
+
+release : cflags += -O3
+release : $(target)
+
 clean:
 	rm $(target)
