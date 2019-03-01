@@ -4,8 +4,7 @@
 // #include <sys/sysinfo.h>
 #include <stdint.h>
 #include <string.h>
-
-// #include <SDL2/SDL.h>
+#include <math.h>
 
 // typedefs
 typedef struct {
@@ -27,6 +26,8 @@ void freelines(lines_t);
 void printvertices(vertices_t);
 void printlines(lines_t);
 void insertvertices(vertices_t*, lines_t*, double*, double*);
+void interpolate(vertices_t*);
+double distance(double, double, double, double);
 
 int main(int argc, char* argv[]) {
 
@@ -35,7 +36,7 @@ int main(int argc, char* argv[]) {
 
   FILE* infile = stdin;
 
-  uint8_t isovalue = 127;
+  double isovalue = 127;
 
   while ((opt = getopt(argc, argv, "f:i:")) != -1) {
     switch (opt) {
@@ -44,9 +45,9 @@ int main(int argc, char* argv[]) {
         infile = fopen(filename, "rb");
         break;
       case 'i':
-        isovalue = atoi(optarg);
+        isovalue = atof(optarg);
       default:
-        printf("USAGE: %s\n", argv[0]);
+        // printf("USAGE: %s\n", argv[0]);
         break;
     }
   }
@@ -56,19 +57,8 @@ int main(int argc, char* argv[]) {
     exit(EXIT_FAILURE);
   }
 
-
   const size_t width = strtoul(argv[0 + optind], NULL, 10);
   const size_t height = strtoul(argv[1 + optind], NULL, 10);
-
-  // SDL_Event event;
-  // SDL_Renderer* renderer;
-  // SDL_Window* window;
-
-  // SDL_Init(SDL_INIT_VIDEO);
-  // SDL_CreateWindowAndRenderer((int) width, (int) height, 0, &window, &renderer);
-
-  // SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
-  // SDL_RenderClear(renderer);
 
   // calloc buffer
   uint8_t* data = calloc(height * width, sizeof(uint8_t));
@@ -89,37 +79,13 @@ int main(int argc, char* argv[]) {
 
   vertices_t vertices = {NULL, 0};
   lines_t lines = {NULL, 0};
+
   march(data, width, height, &vertices, &lines);
+
+  interpolate(&vertices);
 
   printvertices(vertices);
   printlines(lines);
-
-  // SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-
-  /*
-  // NOTE: SDL2 cannot be used with OpenMP
-  for (size_t row = 0; row < height; row++) {
-    for (size_t column = 0; column < width; column++ ) {
-      // printf("%d ", data[row * height + column]);
-      if ( data[row * height + column] )
-        SDL_RenderDrawPoint(renderer, (int) row, (int) column);
-    }
-    // puts("");
-  }
-  */
-
-  // SDL_RenderPresent(renderer);
-
-  // wait until close
-  // while (event.type != SDL_QUIT && event.type != SDL_MOUSEBUTTONDOWN) {
-  //   SDL_PollEvent(&event);
-  //   SDL_Delay(5);
-  // }
-
-  // cleanup SDL
-  // SDL_DestroyRenderer(renderer);
-  // SDL_DestroyWindow(window);
-  // SDL_Quit();
 
   // cleanup
   free(data);
@@ -285,9 +251,13 @@ void march(const uint8_t* data, const size_t width, const size_t height, vertice
       double* top;
       double* bottom;
 
+      // store last position and go from there
+
       switch (square) {
+        // both of these are the same
+        case 0b1110: ;
         case 0b0001: ; // blank statement after label /shrug
-          // bottom right
+          // diagonal bottom right
           // one third from bottom on right
           right = calloc(2, sizeof(double));
           right[0] = rc;
@@ -300,8 +270,9 @@ void march(const uint8_t* data, const size_t width, const size_t height, vertice
           insertvertices(vertices, lines, right, bottom);
 
           break;
+        case 0b1101: ;
         case 0b0010: ;
-          // bottom left
+          // diagonal bottom left
           // one third from bottom on left
           left = calloc(2, sizeof(double));
           left[0] = lc;
@@ -316,6 +287,39 @@ void march(const uint8_t* data, const size_t width, const size_t height, vertice
           insertvertices(vertices, lines, left, bottom);
 
           break;
+        case 0b0111: ;
+        case 0b1000: ;
+          // diagonal top left
+          // one third from top on left
+          left = calloc(2, sizeof(double));
+          left[0] = lc;
+          left[1] = tr + 1.0 / 3;
+
+          // one third from left on top
+          top = calloc(2, sizeof(double));
+          top[0] = lc + 1.0 / 3;
+          top[1] = tr;
+
+          insertvertices(vertices, lines, left, top);
+
+          break;
+        case 0b1011: ;
+        case 0b0100: ;
+          // diagonal top right
+          // one third from top on right
+          right = calloc(2, sizeof(double));
+          right[0] = rc;
+          right[1] = tr + 1.0 / 3;
+
+          // one third from right on top
+          top = calloc(2, sizeof(double));
+          top[0] = rc - 1.0 / 3;
+          top[1] = tr;
+
+          insertvertices(vertices, lines, right, top);
+
+          break;
+        case 0b1100: ;
         case 0b0011: ;
           // horizontal line
           // left halway from bottom
@@ -330,6 +334,7 @@ void march(const uint8_t* data, const size_t width, const size_t height, vertice
           insertvertices(vertices, lines, left, right);
 
           break;
+        case 0b1010: ;
         case 0b0101: ;
           // vertical line
           top = calloc(2, sizeof(double));
@@ -356,13 +361,102 @@ void march(const uint8_t* data, const size_t width, const size_t height, vertice
           left[1] = tr + 1.0 / 3;
 
           insertvertices(vertices, lines, top, left);
+
           // diagonal bottom right
+          // one third on bottom from right
+          bottom = calloc(2, sizeof(double));
+          bottom[0] = rc - 1.0 / 3;
+          bottom[1] = br;
+
+          // one third on right from bottom
+          right = calloc(2, sizeof(double));
+          right[0] = rc;
+          right[1] = br - 1.0 / 3;
+
+          insertvertices(vertices, lines, bottom, right);
           break;
-        case 0b0000:
-        case 0b1111:
-        default:
+        case 0b1001: ;
+          // diagonal top right
+          // one third from top on right
+          right = calloc(2, sizeof(double));
+          right[0] = rc;
+          right[1] = tr + 1.0 / 3;
+
+          // one third from right on top
+          top = calloc(2, sizeof(double));
+          top[0] = rc - 1.0 / 3;
+          top[1] = tr;
+
+          insertvertices(vertices, lines, right, top);
+
+          // diagonal bottom left
+          // one third from bottom on left
+          left = calloc(2, sizeof(double));
+          left[0] = lc;
+          left[1] = br - 1.0 / 3;
+
+          // bottom
+          // one third from left on bottom
+          bottom = calloc(2, sizeof(double));
+          bottom[0] = lc + 1.0 / 3;
+          bottom[1] = br;
+
+          insertvertices(vertices, lines, left, bottom);
+
+          break;
+        case 0b0000: ;
+        case 0b1111: ;
+        default: ;
           break;
       }
+    }
+  }
+}
+
+double distance(double x0, double y0, double x1, double y1) {
+
+  double x = x1 - x0;
+  double y = y1 - y0;
+
+  x *= x;
+  y *= y;
+
+  return sqrt(x + y);
+
+}
+
+void interpolate(vertices_t* vertices) {
+  /*
+   * For each vertex, look ahead
+   * Set this one to first vertex w/in 1/3
+   * 
+   * */
+
+  // if there are no vertices, exit
+  if (vertices->len == 0)
+    return;
+
+  for (size_t x = 0; x < vertices->len - 1; x++) {
+
+    printf("%d\n", vertices->len);
+
+    double* vertex0 = vertices->vertices[x];
+    // printf("v %f %f 0\n", vertex[0], vertex[0]);
+    
+    for (size_t y = x + 1; y < vertices->len; y++) {
+
+      double* vertex1 = vertices->vertices[y];
+
+      double d = distance(vertex0[0], vertex0[1], vertex1[0], vertex1[1]);
+      
+      // check if distance between vertices within tolerance of 0.00001
+      if (d - 1.0 / 3 <= 0.0001) {
+        // printf("(%.1f, %.1f), (%.1f, %.1f) : %.1f\n", vertex0[0], vertex0[1], vertex1[0], vertex1[1], d);
+        vertex0[0] = vertex1[0];
+        vertex0[1] = vertex1[1];
+        break;
+      }
+    
     }
   }
 }

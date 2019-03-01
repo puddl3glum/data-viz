@@ -6,12 +6,12 @@ target = raw2obj
 src = src/main.c
 
 # cflags = -fopenmp
-lflags = -lSDL2
+lflags = -lSDL2 -lm
 
 $(target) : $(src)
 	$(CC) $(cflags) $(lflags) -o $(target) $(src)
 
-debug : cflags += -gdwarf
+debug : cflags += -g
 debug : $(target)
 
 release : cflags += -O3
