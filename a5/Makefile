@@ -5,7 +5,7 @@ target = raw2obj
 
 src = src/main.c
 
-cflags = -fopenmp
+# cflags = -fopenmp
 lflags = -lSDL2
 
 $(target) : $(src)
