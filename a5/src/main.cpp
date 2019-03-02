@@ -87,7 +87,7 @@ int main(int argc, char* argv[]) {
   fclose(infile);
 
   // pixelmap_t pixelmap;
-  auto pixelmap = Pixelmap::frombytes(data, width, height);
+  Pixelmap pixelmap(data, width, height);
 
   free(data);
  

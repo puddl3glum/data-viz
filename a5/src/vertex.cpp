@@ -1,7 +1,7 @@
 
 #include <string>
 
-#include "vertex.h"
+// #include "vertex.h"
 
 class Vertex {
   private:
