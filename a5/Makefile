@@ -1,12 +1,12 @@
 
-CC = gcc
+CC = g++
 
 target = raw2obj
 
-src = src/main.c
+src = src/main.cpp
 
 # cflags = -fopenmp
-lflags = -lSDL2 -lm
+# lflags = -lSDL2
 
 $(target) : $(src)
 	$(CC) $(cflags) $(lflags) -o $(target) $(src)
