@@ -26,8 +26,8 @@ void freelines(lines_t);
 void printvertices(vertices_t);
 void printlines(lines_t);
 void insertvertices(vertices_t*, lines_t*, double*, double*);
-void interpolate(vertices_t*);
-double distance(double, double, double, double);
+void interpolate(vertices_t*, lines_t*);
+// double distance(double, double, double, double);
 
 int main(int argc, char* argv[]) {
 
@@ -82,7 +82,9 @@ int main(int argc, char* argv[]) {
 
   march(data, width, height, &vertices, &lines);
 
-  interpolate(&vertices);
+  // connect(&vertices);
+
+  interpolate(&vertices, &lines);
 
   printvertices(vertices);
   printlines(lines);
@@ -261,10 +263,10 @@ void march(const uint8_t* data, const size_t width, const size_t height, vertice
           // one third from bottom on right
           right = calloc(2, sizeof(double));
           right[0] = rc;
-          right[1] = br - 1.0 / 3;
+          right[1] = br - 0.5;
 
           bottom = calloc(2, sizeof(double));
-          bottom[0] = rc - 1.0 / 3;
+          bottom[0] = rc - 0.5;
           bottom[1] = br;
 
           insertvertices(vertices, lines, right, bottom);
@@ -276,12 +278,12 @@ void march(const uint8_t* data, const size_t width, const size_t height, vertice
           // one third from bottom on left
           left = calloc(2, sizeof(double));
           left[0] = lc;
-          left[1] = br - 1.0 / 3;
+          left[1] = br - 0.5;
 
           // bottom
           // one third from left on bottom
           bottom = calloc(2, sizeof(double));
-          bottom[0] = lc + 1.0 / 3;
+          bottom[0] = lc + 0.5;
           bottom[1] = br;
 
           insertvertices(vertices, lines, left, bottom);
@@ -293,11 +295,11 @@ void march(const uint8_t* data, const size_t width, const size_t height, vertice
           // one third from top on left
           left = calloc(2, sizeof(double));
           left[0] = lc;
-          left[1] = tr + 1.0 / 3;
+          left[1] = tr + 0.5;
 
           // one third from left on top
           top = calloc(2, sizeof(double));
-          top[0] = lc + 1.0 / 3;
+          top[0] = lc + 0.5;
           top[1] = tr;
 
           insertvertices(vertices, lines, left, top);
@@ -309,11 +311,11 @@ void march(const uint8_t* data, const size_t width, const size_t height, vertice
           // one third from top on right
           right = calloc(2, sizeof(double));
           right[0] = rc;
-          right[1] = tr + 1.0 / 3;
+          right[1] = tr + 0.5;
 
           // one third from right on top
           top = calloc(2, sizeof(double));
-          top[0] = rc - 1.0 / 3;
+          top[0] = rc - 0.5;
           top[1] = tr;
 
           insertvertices(vertices, lines, right, top);
@@ -352,26 +354,26 @@ void march(const uint8_t* data, const size_t width, const size_t height, vertice
           // diagonal top left
           // one third on top from left
           top = calloc(2, sizeof(double));
-          top[0] = lc + 1.0 / 3;
+          top[0] = lc + 0.5;
           top[1] = tr;
 
           // one third on left from top
           left = calloc(2, sizeof(double));
           left[0] = lc;
-          left[1] = tr + 1.0 / 3;
+          left[1] = tr + 0.5;
 
           insertvertices(vertices, lines, top, left);
 
           // diagonal bottom right
           // one third on bottom from right
           bottom = calloc(2, sizeof(double));
-          bottom[0] = rc - 1.0 / 3;
+          bottom[0] = rc - 0.5;
           bottom[1] = br;
 
           // one third on right from bottom
           right = calloc(2, sizeof(double));
           right[0] = rc;
-          right[1] = br - 1.0 / 3;
+          right[1] = br - 0.5;
 
           insertvertices(vertices, lines, bottom, right);
           break;
@@ -380,11 +382,11 @@ void march(const uint8_t* data, const size_t width, const size_t height, vertice
           // one third from top on right
           right = calloc(2, sizeof(double));
           right[0] = rc;
-          right[1] = tr + 1.0 / 3;
+          right[1] = tr + 0.5;
 
           // one third from right on top
           top = calloc(2, sizeof(double));
-          top[0] = rc - 1.0 / 3;
+          top[0] = rc - 0.5;
           top[1] = tr;
 
           insertvertices(vertices, lines, right, top);
@@ -393,12 +395,12 @@ void march(const uint8_t* data, const size_t width, const size_t height, vertice
           // one third from bottom on left
           left = calloc(2, sizeof(double));
           left[0] = lc;
-          left[1] = br - 1.0 / 3;
+          left[1] = br - 0.5;
 
           // bottom
           // one third from left on bottom
           bottom = calloc(2, sizeof(double));
-          bottom[0] = lc + 1.0 / 3;
+          bottom[0] = lc + 0.5;
           bottom[1] = br;
 
           insertvertices(vertices, lines, left, bottom);
@@ -425,39 +427,48 @@ double distance(double x0, double y0, double x1, double y1) {
 
 }
 
-void interpolate(vertices_t* vertices) {
-  /*
-   * For each vertex, look ahead
-   * Set this one to first vertex w/in 1/3
-   * 
-   * */
+void interpolate(vertices_t* vertices, lines_t* lines) {
 
-  // if there are no vertices, exit
-  if (vertices->len == 0)
+  if (lines->len == 0)
     return;
 
-  for (size_t x = 0; x < vertices->len - 1; x++) {
+  for (size_t x = 0; x < lines->len - 1; x++) {
 
-    printf("%d\n", vertices->len);
+    // line vertices are index + 1
+    size_t* line = lines->lines[x];
 
-    double* vertex0 = vertices->vertices[x];
-    // printf("v %f %f 0\n", vertex[0], vertex[0]);
-    
-    for (size_t y = x + 1; y < vertices->len; y++) {
+    size_t first = line[0];
+    size_t second = line[1];
+    size_t third;
 
-      double* vertex1 = vertices->vertices[y];
 
-      double d = distance(vertex0[0], vertex0[1], vertex1[0], vertex1[1]);
-      
-      // check if distance between vertices within tolerance of 0.00001
-      if (d - 1.0 / 3 <= 0.0001) {
-        // printf("(%.1f, %.1f), (%.1f, %.1f) : %.1f\n", vertex0[0], vertex0[1], vertex1[0], vertex1[1], d);
-        vertex0[0] = vertex1[0];
-        vertex0[1] = vertex1[1];
+    for (size_t y = 1; y < lines->len; y++) {
+
+      size_t* templine = lines->lines[y];
+
+      if (second == templine[0]) {
+        third = templine[1];
+        // printf("%d %d %d %d\n", first, second, templine[0], third);
+        double* vbeg = vertices->vertices[first - 1];
+        double* vmid = vertices->vertices[second - 1];
+        double* vend = vertices->vertices[third - 1];
+
+        double x = (vbeg[0] + vend[0]) / 2;
+        double y = (vbeg[1] + vend[1]) / 2;
+
+        // printf("(%.2f, %.2f), (%.2f, %.2f)->(%.2f, %.2f), (%.2f, %.2f)\n", vbeg[0], vbeg[1], vmid[0], vmid[1], x, y, vend[0], vend[1]);
+
+        vmid[0] = x;
+        vmid[1] = y;
         break;
       }
-    
     }
+
+
+    // printf("(%f, %f)\n", vmid[0], vmid[1]);
   }
+
+  // exit(0);
+
 }
 
