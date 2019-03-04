@@ -1,0 +1,25 @@
+flags = [
+'-Wall',
+'-Wextra',
+'-Werror',
+'-Wc++98-compat',
+'-Wno-long-long',
+'-Wno-variadic-macros',
+'-fexceptions',
+'-DNDEBUG',
+'-std=c99',
+# ...and the same thing goes for the magic -x option which specifies the
+# language that the files to be compiled are written in. This is mostly
+# relevant for c++ headers.
+# For a C project, you would set this to 'c' instead of 'c++'.
+'-x', #I don't know if I need remove -x
+'c',
+'-isystem',
+'../llvm/include',
+'-isystem',
+'../llvm/tools/clang/include',
+'-I./driver',
+'-I./debug',
+'-I./include',
+]
+

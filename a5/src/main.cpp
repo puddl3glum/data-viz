@@ -1,16 +1,16 @@
-#include <stdio.h>
+#include <cstdio>
 #include <stdlib.h>
 #include <unistd.h>
 // #include <sys/sysinfo.h>
-#include <stdint.h>
+#include <cstdint>
 // #include <string.h>
 // #include <math.h>
 #include <fstream>
 #include <iostream>
 #include <vector>
 
-#include "vertex.h"
-#include "pixelmap.h"
+#include "vertex.hpp"
+#include "pixelmap.hpp"
 
 /*
 // typedefs
@@ -56,7 +56,7 @@ int main(int argc, char* argv[]) {
 
   FILE* infile = stdin;
 
-  double isovalue = 127;
+  uint8_t isovalue = 127;
 
   while ((opt = getopt(argc, argv, "f:i:")) != -1) {
     switch (opt) {
@@ -90,21 +90,17 @@ int main(int argc, char* argv[]) {
   Pixelmap pixelmap(data, width, height);
 
   free(data);
+
+  pixelmap.march(isovalue);
+
+  // cout << pixelmap.to_string();
  
   // apply threshold
   // # pragma omp parallel for num_threads(get_nprocs()) collapse(2)
-  for (size_t row = 0; row < height; row++) {
-    for (size_t column = 0; column < width; column++ ) {
-      // printf("%d ", data[row * height + column]);
-      uint8_t brightness = data[row * height + column];
-      data[row * height + column] = (brightness > isovalue) ? 1 : 0;
-        // SDL_SetRenderDrawColor(renderer, brightness, brightness, brightness, 255);
-    }
-  }
 
   // vertices_t vertices = {0, NULL};
   // lines_t lines = {0, NULL};
-  vector<Vertex> vertexvec;
+  // vector<Vertex> vertexvec;
 
   // march(data, width, height, &vertices, &lines);
 

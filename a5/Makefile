@@ -3,12 +3,14 @@ CC = g++
 
 target = raw2obj
 
-srcs = src/main.cpp src/pixelmap.cpp src/vertex.cpp
+headers = src/pixelmap.hpp src/vertex.hpp src/line.hpp
+srcs = src/main.cpp src/pixelmap.cpp src/vertex.cpp src/line.cpp
 
 # cflags = -fopenmp
+cflags = -Wall
 # lflags = -lSDL2
 
-$(target) : $(src)
+$(target) : $(srcs) $(headers)
 	$(CC) $(cflags) $(lflags) -o $(target) $(srcs)
 
 debug : cflags += -g
