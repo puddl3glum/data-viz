@@ -21,7 +21,8 @@ class Pixelmap {
 
     void mapsquare(std::vector<double>, std::vector<size_t>, double);
     // void interpolate(std::vector<Vertex>&, std::vector<Line>&);
-    void interpolate();
+    // void interpolate();
+    double interpolate(double, double, double);
 
     size_t insertvertex(Vertex&);
 

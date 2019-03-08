@@ -16,7 +16,7 @@ $(target) : $(srcs) $(headers)
 debug : cflags += -g
 debug : $(target)
 
-release : cflags += -O3
+release : cflags += -O2
 release : $(target)
 
 clean:
