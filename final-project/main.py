@@ -170,6 +170,73 @@ def transform_data_cubic(data, slide, gap, rotation: List[float], distance) -> L
 
   return transform
 
+def transform_data_spherical(data, slide, gap, rotation: List[float], distance) -> List[tuple]:
+
+  coords = zip(data, data[1:], data[2:])
+
+  transform: list = []
+
+  # random.seed(0)
+
+  # convert these polar coords to cartesian
+  for coord in coords:
+    r, theta, phi = coord
+
+    # brightness = random.randint(0, 255)
+    if 0 <= r <= 127 and 0 <= theta <= 127:
+      color = (255, 165, 0)
+    else:
+      color = (255, 255, 255)
+
+    theta = radians(theta)
+    phi = radians(phi)
+    x, y, z = r * cos(theta) * sin(phi), r * sin(theta) * sin(phi), r * cos(theta)
+
+    coord = x, y, z
+
+    point = apply_rotation(coord, rotation)
+
+    x1, y1 = project(point, distance)
+
+    new_coord: tuple = (x1, y1, color)
+
+    transform.append(new_coord)
+
+  return transform
+
+def transform_data_cylindrical(data, slide, gap, rotation: List[float], distance) -> List[tuple]:
+
+  coords = zip(data, data[1:], data[2:])
+
+  transform: list = []
+
+  # random.seed(0)
+
+  # convert these polar coords to cartesian
+  for coord in coords:
+    r, theta, z = coord
+
+    # brightness = random.randint(0, 255)
+    if 0 <= r <= 127 and 0 <= theta <= 127:
+      color = (255, 165, 0)
+    else:
+      color = (255, 255, 255)
+
+    theta = radians(theta)
+    x, y, z = r * cos(theta), r * sin(theta), z
+
+    coord = x, y, z
+
+    point = apply_rotation(coord, rotation)
+
+    x1, y1 = project(point, distance)
+
+    new_coord: tuple = (x1, y1, color)
+
+    transform.append(new_coord)
+
+  return transform
+
 def draw_guide_cube(surface, xshift, yshift, rotation, zoom) -> int:
 
   vertices = [
@@ -185,6 +252,7 @@ def draw_guide_cube(surface, xshift, yshift, rotation, zoom) -> int:
 
   vertices = map(lambda v: apply_rotation(v, rotation), vertices)
   vertices = list(map(lambda v: shift(v, (xshift, yshift)), vertices))
+
   vertices = list(map(lambda v: project(v, zoom), vertices))
 
   combs = [
@@ -202,6 +270,7 @@ def draw_guide_cube(surface, xshift, yshift, rotation, zoom) -> int:
     (vertices[3], vertices[7])
   ]
 
+  print(rotation)
   print(vertices)
 
   list(map(lambda v: pygame.draw.line(surface, (255, 255, 255), v[0], v[1], 1), combs))
@@ -213,26 +282,39 @@ def apply_rotation(point, rotation) -> Tuple[float, float, float]:
 
   a, b, c = rotation
 
+  """
   # apply rotation around X
   x = x
   y = y * cos(a) - z * sin(a)
   z = y * sin(a) + z * sin(a)
 
   # apply rotation around Y
-  """
-  x = x * cos(b) + z * sin(b)
+  x = z * sin(b) + x * cos(b)
   y = y
   z = z * cos(b) - x * sin(b)
   """
 
-  # apply rotation around Z
-  x = x * cos(c) - y * sin(c)
-  y = x * sin(c) + y * cos(c)
-  z = z
+  # apply rotation about x and y
+  # [ cos(b)       0       -sin(b)      ]
+  # [ sin(a)sin(b) cos(a)  sin(a)cos(b) ]
+  # [ cos(a)sin(b) -sin(a) cos(a)cos(b) ]
 
-  return x, y, z
+  """
+  x = x * cos(b) - z * sin(b)
+  y = x * sin(a) * sin(b) + y * cos(a) + z * sin(a) * cos(b)
+  z = x * cos(a) * sin(b) - y * sin(a) + z * cos(a) * cos(b)
+  """
+
+  x = x * cos(b)                        + z * sin(b)
+  y = x * sin(a) * sin(b)  + y * cos(a) - z * sin(a) * cos(b)
+  z = x * -cos(a) * sin(b) + y * sin(a) + z * cos(a) * cos(b)
+
+
+  return  x, y, z
 
 def project(point, distance) -> Tuple[float, float]:
+
+  distance = 1000
 
   x, y, z = point
 
@@ -254,7 +336,7 @@ def main(args: list) -> int:
 
   parser.add_argument('-f', '--file', default=0)
   parser.add_argument('-e', '--extent', default=-1, type=int)
-  parser.add_argument('-s', '--shape', choices={'linear', 'square', 'circular', 'cubic'}, default='square')
+  parser.add_argument('-s', '--shape', choices={'linear', 'square', 'circular', 'cubic', 'spherical', 'cylindrical'}, default='square')
   parser.add_argument('-b', '--filetype', choices={'string', 'binary'}, default='binary')
   parser.add_argument('-t', '--datatype', choices={'int', 'float'}, default='float')
   parser.add_argument('-l', '--slide', type=int, default=1)
@@ -361,24 +443,24 @@ def main(args: list) -> int:
           xshift -= abs(8 * zoom)
         elif event.key == pygame.K_w:
           x = rotation[0]
-          x += 0.1 * pi
-          x %= 2 * pi
+          x += 0.1
+          # x %= 2
           rotation[0] = x
         elif event.key == pygame.K_s:
           x = rotation[0]
-          x -= 0.1 * pi
-          x %= 2 * pi
+          x -= 0.1
+          # x %= 2
           rotation[0] = x
         elif event.key == pygame.K_a:
-          z = rotation[2]
-          z += 0.1 * pi
-          z %= 2 * pi
-          rotation[2] = z
+          y = rotation[1]
+          y -= 0.1
+          # y %= 2
+          rotation[1] = y
         elif event.key == pygame.K_d:
-          z = rotation[2]
-          z -= 0.1 * pi
-          z %= 2 * pi
-          rotation[2] = z
+          y = rotation[1]
+          y += 0.1
+          # y %= 2
+          rotation[1] = y
         elif event.key == pygame.K_LEFTBRACKET and pygame.key.get_mods() & pygame.KMOD_SHIFT:
           if gap > 1:
             gap -= 1
@@ -398,6 +480,10 @@ def main(args: list) -> int:
           shape = 'circular'
         elif pygame.key.get_mods() & pygame.KMOD_SHIFT and event.key == pygame.K_4:
             shape = 'cubic'
+        elif pygame.key.get_mods() & pygame.KMOD_SHIFT and event.key == pygame.K_5:
+            shape = 'spherical'
+        elif pygame.key.get_mods() & pygame.KMOD_SHIFT and event.key == pygame.K_6:
+            shape = 'cylindrical'
         # elif event.key == pygame.K_q:
           # running = False
 
@@ -440,6 +526,10 @@ def main(args: list) -> int:
       elif shape == 'cubic':
         transform = transform_data_cubic(data, slide, gap, rotation, zoom)
         draw_guide_cube(surface, xshift, yshift, rotation, zoom)
+      elif shape == 'spherical':
+        transform = transform_data_spherical(data, slide, gap, rotation, zoom)
+      elif shape == 'cylindrical':
+        transform = transform_data_cylindrical(data, slide, gap, rotation, zoom)
 
       # apply zoom and shift
       transform = general_transform(transform, zoom, xshift, yshift)
